@@ -31,7 +31,7 @@ public class GitResolverService {
                 .call();
 
         git.checkout()
-                .addPath(repoDescriptor.getVersion())
+                .addPath(git.getRepository().getTags().get(repoDescriptor.getVersion()).getName())
                 .call();
 
         return git.getRepository().getDirectory().getParentFile();
