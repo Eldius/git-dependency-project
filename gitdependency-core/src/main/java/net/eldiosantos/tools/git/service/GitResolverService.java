@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 
 /**
@@ -20,15 +21,23 @@ public class GitResolverService {
     public File resolve(RepoDescriptor repoDescriptor) throws IOException, GitAPIException {
 
         File destFolder = repoDescriptor.getDestFolder();
-        LOGGER.info("Creating dest folder '{}'...", destFolder.getAbsolutePath());
-        if (!destFolder.exists()) {
-            destFolder.mkdirs();
-        }
 
-        final Git git = Git.cloneRepository()
-                .setURI(repoDescriptor.getUrl())
-                .setDirectory(destFolder)
-                .call();
+        final Git git;
+
+        final FilenameFilter filter = (dir, name) -> name.endsWith(".git");
+        final Boolean repoOrFileExists = (destFolder.exists()) &&
+                (destFolder.listFiles(filter).length > 0);
+
+        if (!repoOrFileExists) {
+            LOGGER.info("Creating dest folder '{}'...", destFolder.getAbsolutePath());
+            destFolder.mkdirs();
+            git = Git.cloneRepository()
+                    .setURI(repoDescriptor.getUrl())
+                    .setDirectory(destFolder)
+                    .call();
+        } else {
+            git = Git.open(new File(repoDescriptor.getDestFolder().getAbsolutePath()));
+        }
 
         git.checkout()
                 .addPath(git.getRepository().getTags().get(repoDescriptor.getVersion()).getName())
