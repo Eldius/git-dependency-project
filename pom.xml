@@ -11,6 +11,7 @@
 
     <modules>
         <module>gitdependency-core</module>
+        <module>gitdependency-maven-plugin</module>
     </modules>
 
     <properties>
@@ -25,6 +26,12 @@
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
                 <version>1.7.25</version>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>gitdependency-core</artifactId>
+                <version>${project.version}</version>
             </dependency>
 
             <dependency>
