@@ -1,6 +1,7 @@
 package net.eldiosantos.tools.git.service;
 
 import com.google.common.truth.Truth;
+import net.eldiosantos.tools.git.exception.GitDependencyManagerException;
 import net.eldiosantos.tools.git.model.RepoDescriptor;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.JGitInternalException;
@@ -171,7 +172,7 @@ public class GitResolverServiceTest {
         destFolder.deleteOnExit();
     }
 
-    @Test(expected = JGitInternalException.class)
+    @Test(expected = GitDependencyManagerException.class)
     public void resolveWithExistingInvalidRepo() throws Exception {
         final String url = "https://github.com/Eldius/light-jndi.git";
         final String name = "my-test-repo";

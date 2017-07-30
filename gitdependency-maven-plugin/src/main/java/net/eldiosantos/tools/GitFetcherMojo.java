@@ -18,11 +18,19 @@ package net.eldiosantos.tools;
 
 import net.eldiosantos.tools.git.model.RepoDescriptor;
 import net.eldiosantos.tools.git.service.GitResolverService;
+import net.eldiosantos.tools.model.MavenRepoDescriptor;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.project.MavenProject;
+import org.apache.maven.settings.Settings;
+
+import java.io.File;
+import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Refreshes the repository from the Git repository.
@@ -33,44 +41,33 @@ import org.apache.maven.plugins.annotations.Parameter;
 )
 public class GitFetcherMojo extends AbstractMojo {
 
-    /**
-     * The Git repository configuration.
-     * url: the Git URL
-     */
-    @Parameter(property = "gitdependency.repo.url", required = true)
-    private String url;
+    @Parameter(name = "repos")
+    private List<MavenRepoDescriptor>repos;
 
-    /**
-     * The Git repository configuration.
-     * name: the folder name to be used in the src/generated
-     */
-    @Parameter(property = "gitdependency.repo.name", required = true)
-    private String name;
 
-    /**
-     * The Git repository configuration.
-     * dest: the destination folder (should be src/generated)
-     */
-    @Parameter(property = "gitdependency.repo.dest", defaultValue = "src/main/generated")
-    private String dest;
 
-    /**
-     * The Git repository configuration.
-     * version: the Git tag to be used
-     */
-    @Parameter(property = "gitdependency.repo.version", required = true)
-    private String version;
+    @Parameter( defaultValue = "${project}", readonly = true )
+    private MavenProject project;
 
-    private RepoDescriptor getRepo() {
-        return new RepoDescriptor(url, dest, version, name);
+
+    private Stream<RepoDescriptor> getRepos() {
+        return repos.stream().map(MavenRepoDescriptor::toDescriptor);
     }
 
     public void execute() throws MojoExecutionException {
+        Log log = getLog();
         try {
-            new GitResolverService().resolve(getRepo());
+
+            GitResolverService service = new GitResolverService();
+            getRepos()
+                .map(service::resolve)
+                .map(File::getAbsolutePath)
+                .peek(log::debug)
+                .forEach(f -> project.addCompileSourceRoot(f));
         } catch (Exception e) {
-            getLog().error("Error trying to refresh sources from git.", e);
+            log.error("Error trying to refresh sources from git.", e);
             throw new MojoExecutionException("Error trying to refresh sources from git.", e);
         }
     }
+
 }
