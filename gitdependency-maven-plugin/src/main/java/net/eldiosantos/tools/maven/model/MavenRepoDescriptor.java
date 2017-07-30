@@ -1,6 +1,6 @@
-package net.eldiosantos.tools.model;
+package net.eldiosantos.tools.maven.model;
 
-import net.eldiosantos.tools.git.model.RepoDescriptor;
+import net.eldiosantos.tools.maven.git.model.RepoDescriptor;
 import org.apache.maven.plugins.annotations.Parameter;
 
 public class MavenRepoDescriptor {

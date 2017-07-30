@@ -1,4 +1,4 @@
-package net.eldiosantos.tools;
+package net.eldiosantos.tools.maven.mojo;
 
 /*
  * Copyright 2001-2005 The Apache Software Foundation.
@@ -16,9 +16,9 @@ package net.eldiosantos.tools;
  * limitations under the License.
  */
 
-import net.eldiosantos.tools.git.model.RepoDescriptor;
-import net.eldiosantos.tools.git.service.GitResolverService;
-import net.eldiosantos.tools.model.MavenRepoDescriptor;
+import net.eldiosantos.tools.maven.git.model.RepoDescriptor;
+import net.eldiosantos.tools.maven.git.service.GitResolverService;
+import net.eldiosantos.tools.maven.model.MavenRepoDescriptor;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
@@ -26,7 +26,6 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
-import org.apache.maven.settings.Settings;
 
 import java.io.File;
 import java.util.List;

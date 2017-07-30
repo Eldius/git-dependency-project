@@ -1,4 +1,4 @@
-package net.eldiosantos.tools.git.exception;
+package net.eldiosantos.tools.maven.git.exception;
 
 public class GitDependencyManagerException extends RuntimeException {
     public GitDependencyManagerException() {

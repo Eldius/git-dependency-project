@@ -1,9 +1,8 @@
-package net.eldiosantos.tools.git.service;
+package net.eldiosantos.tools.maven.git.service;
 
-import net.eldiosantos.tools.git.exception.GitDependencyManagerException;
-import net.eldiosantos.tools.git.model.RepoDescriptor;
+import net.eldiosantos.tools.maven.git.exception.GitDependencyManagerException;
+import net.eldiosantos.tools.maven.git.model.RepoDescriptor;
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

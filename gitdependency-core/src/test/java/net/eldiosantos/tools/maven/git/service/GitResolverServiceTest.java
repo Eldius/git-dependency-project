@@ -1,21 +1,15 @@
-package net.eldiosantos.tools.git.service;
+package net.eldiosantos.tools.maven.git.service;
 
 import com.google.common.truth.Truth;
-import net.eldiosantos.tools.git.exception.GitDependencyManagerException;
-import net.eldiosantos.tools.git.model.RepoDescriptor;
+import net.eldiosantos.tools.maven.git.exception.GitDependencyManagerException;
+import net.eldiosantos.tools.maven.git.model.RepoDescriptor;
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.JGitInternalException;
-import org.eclipse.jgit.lib.Ref;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.nio.file.Files;
 import java.util.Arrays;
-import java.util.stream.Collectors;
-
-import static org.junit.Assert.*;
 
 public class GitResolverServiceTest {
 

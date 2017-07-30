@@ -1,4 +1,4 @@
-package net.eldiosantos.tools.git.model;
+package net.eldiosantos.tools.maven.git.model;
 
 import java.io.File;
 import java.io.IOException;
