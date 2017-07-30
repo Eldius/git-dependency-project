@@ -28,6 +28,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -55,18 +56,41 @@ public class GitFetcherMojo extends AbstractMojo {
 
     public void execute() throws MojoExecutionException {
         Log log = getLog();
+        log.info("Starting the Git Dependency Plugin execution...");
+        log.info(String.format("Configuration: %s", repos));
         try {
 
             GitResolverService service = new GitResolverService();
             getRepos()
                 .map(service::resolve)
-                .map(File::getAbsolutePath)
-                .peek(log::debug)
-                .forEach(f -> project.addCompileSourceRoot(f));
+                .map(File::getAbsoluteFile)
+                .peek(f -> log.info(String.format("Adding project %s", f.getAbsolutePath())))
+                    .peek(f -> { // add source folders
+                        File mainFolder = new File(String.format("%s/src/main", f.getAbsolutePath()));
+                        Arrays.asList(mainFolder.listFiles((dir, name) -> !name.equals("resources")))
+                                .forEach(scf -> project.addCompileSourceRoot(scf.getAbsolutePath()));
+                    })
+                    .peek(f -> // add resource folder
+                        project.addCompileSourceRoot(
+                            new File(String.format("%s/src/main/resources", f.getAbsolutePath())).getAbsolutePath()
+                        )
+                    )
+                    .peek(f -> { // add test source folders
+                        File mainFolder = new File(String.format("%s/src/test", f.getAbsolutePath()));
+                        Arrays.asList(mainFolder.listFiles((dir, name) -> !name.equals("resources")))
+                                .forEach(scf -> project.addCompileSourceRoot(scf.getAbsolutePath()));
+                    })
+                    .peek(f -> // add test resource folder
+                        project.addCompileSourceRoot(
+                            new File(String.format("%s/src/test/resources", f.getAbsolutePath())).getAbsolutePath()
+                        )
+                    );
         } catch (Exception e) {
             log.error("Error trying to refresh sources from git.", e);
             throw new MojoExecutionException("Error trying to refresh sources from git.", e);
         }
+        log.info("Finishing the Git Dependency Plugin execution...");
     }
 
 }
+
