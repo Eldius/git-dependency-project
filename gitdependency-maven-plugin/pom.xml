@@ -6,9 +6,9 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>git-maven-plugin</artifactId>
+    <artifactId>gitdependency-maven-plugin</artifactId>
     <packaging>maven-plugin</packaging>
-    <name>git-maven-plugin Maven Mojo</name>
+    <name>gitdependency-maven-plugin</name>
     <url>http://maven.apache.org</url>
     <dependencies>
         <dependency>
@@ -35,4 +35,26 @@
             <artifactId>junit</artifactId>
         </dependency>
     </dependencies>
+
+    <build>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-plugin-plugin</artifactId>
+                <version>3.5</version>
+                <configuration>
+                    <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>mojo-descriptor</id>
+                        <goals>
+                            <goal>descriptor</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

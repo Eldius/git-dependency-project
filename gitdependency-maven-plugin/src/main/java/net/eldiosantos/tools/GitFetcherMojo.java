@@ -24,17 +24,52 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
-@Mojo(name = "refresh", defaultPhase = LifecyclePhase.GENERATE_SOURCES)
+/**
+ * Refreshes the repository from the Git repository.
+ */
+@Mojo(
+    name = "refresh"
+    , defaultPhase = LifecyclePhase.GENERATE_SOURCES
+)
 public class GitFetcherMojo extends AbstractMojo {
 
-    @Parameter(property = "gitdependency.repo")
-    private RepoDescriptor repo;
+    /**
+     * The Git repository configuration.
+     * url: the Git URL
+     */
+    @Parameter(property = "gitdependency.repo.url", required = true)
+    private String url;
+
+    /**
+     * The Git repository configuration.
+     * name: the folder name to be used in the src/generated
+     */
+    @Parameter(property = "gitdependency.repo.name", required = true)
+    private String name;
+
+    /**
+     * The Git repository configuration.
+     * dest: the destination folder (should be src/generated)
+     */
+    @Parameter(property = "gitdependency.repo.dest", defaultValue = "src/main/generated")
+    private String dest;
+
+    /**
+     * The Git repository configuration.
+     * version: the Git tag to be used
+     */
+    @Parameter(property = "gitdependency.repo.version", required = true)
+    private String version;
+
+    private RepoDescriptor getRepo() {
+        return new RepoDescriptor(url, dest, version, name);
+    }
 
     public void execute() throws MojoExecutionException {
         try {
-            new GitResolverService().resolve(repo);
+            new GitResolverService().resolve(getRepo());
         } catch (Exception e) {
-            e.printStackTrace();
+            getLog().error("Error trying to refresh sources from git.", e);
             throw new MojoExecutionException("Error trying to refresh sources from git.", e);
         }
     }
