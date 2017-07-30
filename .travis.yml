@@ -5,7 +5,7 @@ sudo: false # faster builds
 jdk:
   - oraclejdk8
 
-script: ./mvnw clean install
+script: ./mvnw clean install site
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
